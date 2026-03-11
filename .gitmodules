@@ -1,0 +1,3 @@
+[submodule "ext/libxcrypt"]
+	path = ext/libxcrypt
+	url = https://github.com/besser82/libxcrypt
