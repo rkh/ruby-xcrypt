@@ -17,7 +17,6 @@ Gem::Specification.new do |spec|
   DESC
 
   spec.files = Dir["lib/**/*.rb"] +
-               Dir["ext/xcrypt/**/*.c"] +
                Dir["ext/libxcrypt/{lib,doc,test}/**/*"].reject { |f| File.directory?(f) } +
                Dir["ext/libxcrypt/build-aux/m4/**/*.m4"] +
                Dir["ext/libxcrypt/build-aux/scripts/**/*"].reject { |f| File.directory?(f) } +
@@ -40,9 +39,10 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = ">= 3.0"
 
-  spec.add_dependency "ffi",          "~> 1.0"
-  spec.add_dependency "ffi-compiler", "~> 1.0"
-  spec.add_dependency "rake",         "~> 13.0"
+  spec.add_dependency "ffi",  "~> 1.0"
+  spec.add_dependency "rake", "~> 13.0"
+
+  spec.add_development_dependency "rake-compiler-dock"
 
   spec.metadata["source_code_uri"] = "https://github.com/rkh/ruby-xcrypt"
 end

@@ -5,5 +5,6 @@ gemspec
 group :development do
   gem "minitest"
   gem "rake"
+  gem "rake-compiler-dock"
   gem "irb"
 end

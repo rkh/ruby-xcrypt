@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "ffi"
-require "ffi-compiler/loader"
 
 module XCrypt
   # Low-level FFI bindings for libxcrypt.
@@ -9,9 +8,9 @@ module XCrypt
   # Consumers should use the high-level {XCrypt} module methods instead of
   # calling into this module directly.
   #
-  # The shared library loaded here is compiled from the libxcrypt submodule
-  # (ext/libxcrypt) via ffi-compiler.  Run <tt>bundle exec rake compile</tt>
-  # to build it before loading this gem.
+  # The shared library loaded here is built from the libxcrypt submodule
+  # (ext/libxcrypt).  Run <tt>bundle exec rake compile</tt> to build it
+  # before loading this gem.
   module FFI
     extend ::FFI::Library
 
@@ -32,11 +31,15 @@ module XCrypt
     CRYPT_SALT_METHOD_LEGACY   = 3
     CRYPT_SALT_TOO_CHEAP       = 4
 
-    # Load the native extension compiled from the libxcrypt submodule.
-    # FFI::Compiler::Loader searches for lib<arch>-<os>/libxcrypt.{bundle,so}
-    # relative to this file's location.
+    # Load the shared library built from the libxcrypt submodule.
+    # It lives in a platform-specific subdirectory next to this file.
     begin
-      ffi_lib ::FFI::Compiler::Loader.find("xcrypt")
+      _ext     = ::FFI::Platform.mac? ? "bundle" : "so"
+      _lib     = File.expand_path(
+        "../#{::FFI::Platform::ARCH}-#{::FFI::Platform::OS}/libxcrypt.#{_ext}",
+        __FILE__
+      )
+      ffi_lib _lib
     rescue LoadError
       raise LoadError,
             "XCrypt native extension not found. " \

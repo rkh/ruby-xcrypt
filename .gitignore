@@ -3,3 +3,4 @@ lib/xcrypt/*-*/
 Gemfile.lock
 *.gem
 .bundle/
+vendor/bundle/
