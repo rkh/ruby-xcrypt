@@ -51,6 +51,8 @@ namespace :gem do
 
   desc "Publish all built gems to RubyGems.org (requires authentication)"
   task publish: %i[ clobber build test test:linux ] do
+    print "Enter OTP for RubyGems.org: "
+    ENV["RUBYGEMS_OTP"] = STDIN.gets.chomp
     Dir.glob("pkg/*.gem") { sh "gem push #{it}" }
   end
 end

@@ -74,40 +74,6 @@ module XCrypt
     # hashing method.
     attach_function :crypt_preferred_method, [], :string
 
-    # yescrypt_params_t — parameter struct for yescrypt_encode_params_r.
-    #
-    # Mirrors the C struct:
-    #   typedef struct {
-    #     yescrypt_flags_t flags;  /* uint32_t */
-    #     uint64_t N;
-    #     uint32_t r, p, t, g;
-    #     uint64_t NROM;
-    #   } yescrypt_params_t;
-    #
-    # FFI automatically inserts the 4-byte padding needed to align N to 8 bytes.
-    class YescryptParams < ::FFI::Struct
-      layout :flags, :uint32,
-             :N,     :uint64,
-             :r,     :uint32,
-             :p,     :uint32,
-             :t,     :uint32,
-             :g,     :uint32,
-             :NROM,  :uint64
-    end
-
-    # uint8_t *yescrypt_encode_params_r(const yescrypt_params_t *params,
-    #                                   const uint8_t *src, size_t srclen,
-    #                                   uint8_t *buf, size_t buflen)
-    #
-    # Generates a $y$ setting string from explicit yescrypt parameters and
-    # a caller-supplied raw salt (src/srclen).  Returns NULL on error.
-    #
-    # libxcrypt renames this symbol to _crypt_yescrypt_encode_params_r via a
-    # #define in crypt-port.h, so that is the actual exported symbol name.
-    attach_function :yescrypt_encode_params_r,
-                    :_crypt_yescrypt_encode_params_r,
-                    [:pointer, :pointer, :size_t, :pointer, :size_t],
-                    :pointer
   end
 
   private_constant :FFI

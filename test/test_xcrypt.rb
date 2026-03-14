@@ -107,7 +107,7 @@ class TestXCrypt < Minitest::Test
 
   def test_generate_setting_yescrypt_with_flags
     setting = XCrypt.generate_setting(:yescrypt, n: 4096, r: 8, p: 1,
-                                      flags: XCrypt::YESCRYPT_DEFAULTS)
+                                      flags: XCrypt::Yescrypt::DEFAULTS)
     assert setting.start_with?("$y$"), "expected $y$ prefix, got: #{setting}"
   end
 
