@@ -33,6 +33,20 @@ module XCryptBuild
       dock:        "aarch64-linux",
       arch_flag:   nil,
     },
+    "x86-linux"     => {
+      ffi_arch_os: "i386-linux",
+      host:        "i686-linux-gnu",
+      cc:          "i686-linux-gnu-gcc",
+      dock:        "x86-linux",
+      arch_flag:   nil,
+    },
+    "arm-linux"     => {
+      ffi_arch_os: "arm-linux",
+      host:        "arm-linux-gnueabihf",
+      cc:          "arm-linux-gnueabihf-gcc",
+      dock:        "arm-linux",
+      arch_flag:   nil,
+    },
     "x86_64-darwin" => {
       ffi_arch_os: "x86_64-darwin",
       host:        nil,
