@@ -54,6 +54,18 @@ hash    = XCrypt.crypt("hunter2", setting)
 
 Note that you should always generate a new setting for each password, as it contains a random salt. Reusing the same setting for multiple passwords is not recommended.
 
+As a shorthand, you can also pass the keyword arguments directly to `crypt`:
+
+```ruby
+hash = XCrypt.crypt("hunter2", algorithm: :bcrypt, cost: 12)
+```
+
+Or to the per-algorithm methods:
+
+```ruby
+hash = XCrypt.scrypt("hunter2", n: 2**12, r: 8, p: 1)
+```
+
 ### Detecting the algorithm of a stored hash
 
 ```ruby

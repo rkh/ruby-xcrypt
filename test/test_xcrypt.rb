@@ -95,6 +95,65 @@ class TestXCrypt < Minitest::Test
     assert_raises(ArgumentError) { XCrypt.generate_setting(:nonexistent) }
   end
 
+  def test_generate_setting_yescrypt_with_n_r_p
+    setting = XCrypt.generate_setting(:yescrypt, n: 4096, r: 8, p: 1)
+    assert setting.start_with?("$y$"), "expected $y$ prefix, got: #{setting}"
+  end
+
+  def test_generate_setting_yescrypt_with_t
+    setting = XCrypt.generate_setting(:yescrypt, n: 4096, r: 8, p: 1, t: 1)
+    assert setting.start_with?("$y$"), "expected $y$ prefix, got: #{setting}"
+  end
+
+  def test_generate_setting_yescrypt_with_flags
+    setting = XCrypt.generate_setting(:yescrypt, n: 4096, r: 8, p: 1,
+                                      flags: XCrypt::YESCRYPT_DEFAULTS)
+    assert setting.start_with?("$y$"), "expected $y$ prefix, got: #{setting}"
+  end
+
+  def test_generate_setting_yescrypt_params_produce_unique_salts
+    s1 = XCrypt.generate_setting(:yescrypt, n: 4096, r: 8, p: 1)
+    s2 = XCrypt.generate_setting(:yescrypt, n: 4096, r: 8, p: 1)
+    refute_equal s1, s2
+  end
+
+  def test_generate_setting_yescrypt_params_hashable
+    setting = XCrypt.generate_setting(:yescrypt, n: 4096, r: 8, p: 1)
+    hash = XCrypt.crypt("hunter2", setting)
+    assert XCrypt.verify("hunter2", hash)
+    refute XCrypt.verify("wrong", hash)
+  end
+
+  def test_generate_setting_yescrypt_invalid_n_raises
+    assert_raises(ArgumentError) { XCrypt.generate_setting(:yescrypt, n: 1000) }
+  end
+
+  def test_generate_setting_scrypt_with_n_r_p
+    setting = XCrypt.generate_setting(:scrypt, n: 8192, r: 32, p: 1)
+    assert setting.start_with?("$7$"), "expected $7$ prefix, got: #{setting}"
+  end
+
+  def test_generate_setting_scrypt_params_produce_unique_salts
+    s1 = XCrypt.generate_setting(:scrypt, n: 8192, r: 32, p: 1)
+    s2 = XCrypt.generate_setting(:scrypt, n: 8192, r: 32, p: 1)
+    refute_equal s1, s2
+  end
+
+  def test_generate_setting_scrypt_params_hashable
+    setting = XCrypt.generate_setting(:scrypt, n: 8192, r: 32, p: 1)
+    hash = XCrypt.crypt("hunter2", setting)
+    assert XCrypt.verify("hunter2", hash)
+    refute XCrypt.verify("wrong", hash)
+  end
+
+  def test_generate_setting_scrypt_invalid_n_raises
+    assert_raises(ArgumentError) { XCrypt.generate_setting(:scrypt, n: 1000) }
+  end
+
+  def test_generate_setting_raises_for_unsupported_algorithm_with_params
+    assert_raises(ArgumentError) { XCrypt.generate_setting(:bcrypt, n: 4096) }
+  end
+
   # ---------------------------------------------------------------------------
   # crypt
   # ---------------------------------------------------------------------------
